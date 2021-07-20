@@ -88,21 +88,29 @@ function App() {
   });
 
   return (
-    <div className="bg-dark_main min-h-screen">
-      <LoginButton/>
-      <Form/>
+    <div className="bg-dark_main min-h-screen p-5">
 
-      {tracks.map((item) => {
-        return (
-          <Track
-            key={item.album.id}
-            image_url={item.album.images[0].url}
-            track_title={item.name}
-            artist_name={item.album.artists[0].name}
-            album_name={item.album.name}
-          />
-        );
-      })}
+      {(!access_token) && (
+        <LoginButton/>
+      )}
+
+      {(access_token) && (
+        <Form/>
+      )}
+
+      <div className="mt-5 flex flex-wrap">
+        {tracks.map((item) => {
+          return (
+            <Track
+              key={item.album.id}
+              image_url={item.album.images[0].url}
+              track_title={item.name}
+              artist_name={item.album.artists[0].name}
+              album_name={item.album.name}
+            />
+          );
+        })}
+      </div>
 
     </div>
   );
