@@ -1,6 +1,10 @@
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
+
+  const [access_token, set_access_token] = useState(null);
+  const [query, set_query] = useState('');
 
   const LoginButton = () => {
 
@@ -22,6 +26,19 @@ function App() {
     );
   }
 
+  const Form = () => {
+    return (
+      <div className="w-full">
+        <input
+          onChange={(event) => {set_query(event.target.value)}}
+          value={query} type="text"
+          className="bg-gray-200 px-2 py-1 rounded-bl rounded-tl w-80 mb-3"
+          placeholder="Type anything..."></input>
+        <button onClick={() => {this.handleClick()}} className="bg-spotify_main hover:bg-gray-600 px-2 py-1 mb-3 text-white rounded-br rounded-tr"><i className="fa fa-search"></i></button>
+      </div>
+    );
+  }
+
   function getHashParams() {
     let hashParams = {};
     let e, r = /([^&;=]+)=?([^&;]*)/g,
@@ -32,9 +49,16 @@ function App() {
     return hashParams;
   }
 
+  useEffect(() => {
+    let params = getHashParams()
+    let token = params.access_token;
+    set_access_token(token);
+  });
+
   return (
     <>
       <LoginButton/>
+      <Form/>
     </>
   );
 }
