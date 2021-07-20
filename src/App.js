@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+const axios = require('axios');
+
 function App() {
 
   const [access_token, set_access_token] = useState(null);
   const [query, set_query] = useState('');
+  const [tracks, set_tracks] = useState([]);
 
   const LoginButton = () => {
 
@@ -20,8 +23,7 @@ function App() {
 
     return (
       <a href={spotify_url} className="bg-spotify_main hover:bg-gray-600 w-60 rounded-full text-white font-medium px-1 py-1 flex cursor-pointer justify-center align-middle">
-        <i className="m-2 fab fa-spotify"></i>
-        <a className="my-1">LOG IN WITH SPOTIFY</a>
+        LOG IN WITH SPOTIFY
       </a>
     );
   }
@@ -34,9 +36,29 @@ function App() {
           value={query} type="text"
           className="bg-gray-200 px-2 py-1 rounded-bl rounded-tl w-80 mb-3"
           placeholder="Type anything..."></input>
-        <button onClick={() => {this.handleClick()}} className="bg-spotify_main hover:bg-gray-600 px-2 py-1 mb-3 text-white rounded-br rounded-tr"><i className="fa fa-search"></i></button>
+        <button onClick={() => {handleClick()}} className="bg-spotify_main hover:bg-gray-600 px-2 py-1 mb-3 text-white rounded-br rounded-tr"><i className="fa fa-search"></i></button>
       </div>
     );
+  }
+
+  
+
+  function handleClick() {
+    try {
+      let url = 'https://api.spotify.com/v1/search?q='+query+'&type=track,artist';
+      axios.get(url, {
+        headers: {
+          'Authorization': 'Bearer ' + access_token
+        },
+      })
+      .then(res => {
+        set_tracks(res.data.tracks.items);
+      })
+    } catch (err) {
+      console.error(err);
+    } finally {
+      console.log(tracks);
+    }
   }
 
   function getHashParams() {
